@@ -1,0 +1,22 @@
+{
+    "name": "procergs/tos-bundle",
+    "description": "Terms of Service Bundle",
+    "type": "symfony-bundle",
+    "license": "AGPLv3",
+    "authors": [
+        {
+            "name": "Guilherme Donato",
+            "email": "guilhermednt@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.3.*",
+        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "twig/extensions": "1.0.*",
+        "sensio/framework-extra-bundle": "2.3.*",
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "cebe/markdown": "^1.1"
+    }
+}
