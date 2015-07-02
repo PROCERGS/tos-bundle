@@ -102,9 +102,15 @@ class TermsOfServiceController extends Controller
      * @Template("LoginCidadaoTOSBundle:TermsOfService:latest.html.twig")
      * @Secure(roles="IS_AUTHENTICATED_ANONYMOUSLY")
      */
-    public function showLatestAction()
+    public function showLatestAction(Request $request)
     {
-        $user          = $this->getUser();
+        $user     = $this->getUser();
+        $username = $request->get('username');
+        if ($user === null && $username !== null) {
+            $userManager = $this->get('fos_user.user_manager');
+            $username    = $request->get('username');
+            $user        = $userManager->findByUsername($username);
+        }
         $termsRepo     = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
         $agreementRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:Agreement');
         $latest        = $termsRepo->findLatestTerms();
