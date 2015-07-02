@@ -27,7 +27,7 @@ class AgreementRepository extends EntityRepository
                                          TOSInterface $terms)
     {
         return $this->createQueryBuilder('a')
-                ->where('termsOfService = :terms')
+                ->where('a.termsOfService = :terms')
                 ->andWhere('a.user = :user')
                 ->orderBy('a.agreedAt', 'DESC')
                 ->setParameters(compact('user', 'terms'))
