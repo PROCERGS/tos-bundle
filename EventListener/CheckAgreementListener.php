@@ -16,6 +16,7 @@ use Symfony\Bundle\AsseticBundle\Controller\AsseticController;
 use Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -50,7 +51,8 @@ class CheckAgreementListener
         if ($this->httpUtils->checkRequestPath($request, 'tos_agree') ||
             $this->httpUtils->checkRequestPath($request, 'tos_terms') ||
             $request->attributes->get('_controller') == 'LoginCidadaoTOSBundle:Agreement' ||
-            $request->attributes->get('_controller') == 'LoginCidadaoTOSBundle:TermsOfService:showLatest') {
+            $request->attributes->get('_controller') == 'LoginCidadaoTOSBundle:TermsOfService:showLatest' ||
+            $event->getRequestType() === HttpKernelInterface::SUB_REQUEST) {
             return;
         }
 
