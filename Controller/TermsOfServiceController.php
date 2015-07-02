@@ -121,7 +121,8 @@ class TermsOfServiceController extends Controller
         );
         $form->add('submit', 'submit',
             array(
-            'label' => 'tos.form.create.label', 'attr' => array('class' => 'btn-success')
+            'label' => 'tos.form.create.label',
+            'attr' => array('class' => 'btn-success')
         ));
         return $form;
     }
@@ -138,7 +139,8 @@ class TermsOfServiceController extends Controller
         );
         $form->add('submit', 'submit',
             array(
-            'label' => 'Save', 'attr' => array('class' => 'btn-success')
+            'label' => 'tos.form.save.label',
+            'attr' => array('class' => 'btn-success')
         ));
         return $form;
     }
