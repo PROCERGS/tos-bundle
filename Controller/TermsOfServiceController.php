@@ -108,7 +108,11 @@ class TermsOfServiceController extends Controller
         $termsRepo     = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
         $agreementRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:Agreement');
         $latest        = $termsRepo->findLatestTerms();
-        $agreement     = $agreementRepo->findAgreementByTerms($user, $latest);
+        if ($user !== null) {
+            $agreement = $agreementRepo->findAgreementByTerms($user, $latest);
+        } else {
+            $agreement = null;
+        }
 
         return compact('latest', 'agreement');
     }
