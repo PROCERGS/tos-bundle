@@ -104,10 +104,13 @@ class TermsOfServiceController extends Controller
      */
     public function showLatestAction()
     {
-        $termsRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
-        $latest    = $termsRepo->findLatestTerms();
+        $user          = $this->getUser();
+        $termsRepo     = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
+        $agreementRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:Agreement');
+        $latest        = $termsRepo->findLatestTerms();
+        $agreement     = $agreementRepo->findAgreementByTerms($user, $latest);
 
-        return compact('latest');
+        return compact('latest', 'agreement');
     }
 
     private function getCreateForm(TOSInterface $terms)
