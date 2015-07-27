@@ -91,7 +91,7 @@ class TermsOfServiceController extends Controller
             $em->persist($terms);
             $em->flush();
 
-            return $this->redirectToRoute('tos_admin_list');
+            return $this->redirect($this->generateUrl('tos_admin_list'));
         }
 
         return compact('form');
@@ -156,11 +156,5 @@ class TermsOfServiceController extends Controller
             'attr' => array('class' => 'btn-success')
         ));
         return $form;
-    }
-
-    private function redirectToRoute($route, array $parameters = array(),
-                                     $status = 302)
-    {
-        return $this->redirect($this->generateUrl($route, $parameters), $status);
     }
 }
