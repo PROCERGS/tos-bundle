@@ -44,10 +44,7 @@ class TOSManager
             return true;
         }
 
-        $agreement = $this->agreementRepo->findOneBy(array(
-            'termsOfService' => $latest,
-            'user' => $user
-        ));
+        $agreement = $this->agreementRepo->findAgreementByTerms($user, $latest);
 
         return $agreement instanceof AgreementInterface &&
             $agreement->getAgreedAt() > $latest->getUpdatedAt();
