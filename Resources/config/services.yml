@@ -32,7 +32,8 @@ services:
     tos.agreement.listener:
         class: %tos.agreement.listener.class%
         arguments:
-            - @security.context
+            - @security.authorization_checker
+            - @security.token_storage
             - @tos.manager
             - @security.http_utils
         tags:

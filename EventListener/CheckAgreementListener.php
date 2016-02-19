@@ -17,14 +17,18 @@ use Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\HttpUtils;
 
 class CheckAgreementListener
 {
-    /** @var SecurityContextInterface */
-    private $securityContext;
+    /** @var Security */
+    private $securityChecker;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     /** @var HttpUtils */
     private $httpUtils;
@@ -32,10 +36,12 @@ class CheckAgreementListener
     /** @var TOSManager */
     private $termsManager;
 
-    public function __construct(SecurityContextInterface $securityContext,
+    public function __construct(Security $securityChecker,
+                                TokenStorageInterface $tokenStorage,
                                 TOSManager $termsManager, HttpUtils $httpUtils)
     {
-        $this->securityContext = $securityContext;
+        $this->securityChecker = $securityChecker;
+        $this->tokenStorage    = $tokenStorage;
         $this->termsManager    = $termsManager;
         $this->httpUtils       = $httpUtils;
     }
@@ -50,13 +56,15 @@ class CheckAgreementListener
 
         if ($this->httpUtils->checkRequestPath($request, 'tos_agree') ||
             $this->httpUtils->checkRequestPath($request, 'tos_terms') ||
-            $request->attributes->get('_controller') == 'LoginCidadaoTOSBundle:Agreement' ||
-            $request->attributes->get('_controller') == 'LoginCidadaoTOSBundle:TermsOfService:showLatest' ||
+            $request->attributes->get('_controller') == 'LoginCidadaoTOSBundle:Agreement'
+            ||
+            $request->attributes->get('_controller') == 'LoginCidadaoTOSBundle:TermsOfService:showLatest'
+            ||
             $event->getRequestType() === HttpKernelInterface::SUB_REQUEST) {
             return;
         }
 
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         if (!$this->termsManager->hasAgreedToLatestTerms($user)) {
             throw new TermsNotAgreedException();
         }
@@ -64,11 +72,11 @@ class CheckAgreementListener
 
     private function shouldCheckTerms(FilterControllerEvent $event)
     {
-        $hasToken = $this->securityContext->getToken() instanceof TokenInterface;
-        if (!$hasToken || false === $this->securityContext->isGranted('ROLE_USER')) {
+        $hasToken = $this->tokenStorage->getToken() instanceof TokenInterface;
+        if (!$hasToken || false === $this->securityChecker->isGranted('ROLE_USER')) {
             return false;
         }
-        if ($this->securityContext->isGranted('ROLE_ADMIN')) {
+        if ($this->securityChecker->isGranted('ROLE_ADMIN')) {
             return false;
         }
 
