@@ -18,14 +18,14 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\HttpUtils;
 
 class CheckAgreementListener
 {
-    /** @var Security */
-    private $securityChecker;
+    /** @var AuthorizationCheckerInterface */
+    private $authChecker;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -36,14 +36,14 @@ class CheckAgreementListener
     /** @var TOSManager */
     private $termsManager;
 
-    public function __construct(Security $securityChecker,
+    public function __construct(AuthorizationCheckerInterface $authChecker,
                                 TokenStorageInterface $tokenStorage,
                                 TOSManager $termsManager, HttpUtils $httpUtils)
     {
-        $this->securityChecker = $securityChecker;
-        $this->tokenStorage    = $tokenStorage;
-        $this->termsManager    = $termsManager;
-        $this->httpUtils       = $httpUtils;
+        $this->authChecker  = $authChecker;
+        $this->tokenStorage = $tokenStorage;
+        $this->termsManager = $termsManager;
+        $this->httpUtils    = $httpUtils;
     }
 
     public function onFilterController(FilterControllerEvent $event)
@@ -73,10 +73,10 @@ class CheckAgreementListener
     private function shouldCheckTerms(FilterControllerEvent $event)
     {
         $hasToken = $this->tokenStorage->getToken() instanceof TokenInterface;
-        if (!$hasToken || false === $this->securityChecker->isGranted('ROLE_USER')) {
+        if (!$hasToken || false === $this->authChecker->isGranted('ROLE_USER')) {
             return false;
         }
-        if ($this->securityChecker->isGranted('ROLE_ADMIN')) {
+        if ($this->authChecker->isGranted('ROLE_ADMIN')) {
             return false;
         }
 
