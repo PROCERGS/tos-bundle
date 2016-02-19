@@ -9,33 +9,31 @@ parameters:
 
 services:
     tos.terms_of_service.repository:
-        class:           Doctrine\ORM\EntityRepository
-        factory_service: doctrine
-        factory_method:  getRepository
+        class: %tos.terms_of_service.class%
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - %tos.terms_of_service.class%
 
     tos.agreement.repository:
-        class:           Doctrine\ORM\EntityRepository
-        factory_service: doctrine
-        factory_method:  getRepository
+        class: %tos.agreement.class%
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - %tos.agreement.class%
 
     tos.manager:
         class: %tos.manager.class%
         arguments:
-            - @doctrine.orm.entity_manager
-            - @tos.agreement.repository
-            - @tos.terms_of_service.repository
+            - "@doctrine.orm.entity_manager"
+            - "@tos.agreement.repository"
+            - "@tos.terms_of_service.repository"
 
     tos.agreement.listener:
         class: %tos.agreement.listener.class%
         arguments:
-            - @security.authorization_checker
-            - @security.token_storage
-            - @tos.manager
-            - @security.http_utils
+            - "@security.authorization_checker"
+            - "@security.token_storage"
+            - "@tos.manager"
+            - "@security.http_utils"
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onFilterController }
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
@@ -43,8 +41,8 @@ services:
     tos.user_register.listener:
         class: %tos.user_register.listener.class%
         arguments:
-            - @doctrine.orm.entity_manager
-            - @tos.manager
+            - "@doctrine.orm.entity_manager"
+            - "@tos.manager"
         tags:
             - { name: kernel.event_subscriber }
 
@@ -59,6 +57,6 @@ services:
     tos.twig.markdown_extension:
         class: LoginCidadao\TOSBundle\Twig\Extension\MarkdownExtension
         arguments:
-            - @tos.markdown.parser.standard
+            - "@tos.markdown.parser.standard"
         tags:
             - { name: twig.extension }
