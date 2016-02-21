@@ -125,14 +125,16 @@ class TermsOfServiceController extends Controller
 
     private function getCreateForm(TOSInterface $terms)
     {
-        $form = $this->createForm(new TermsOfServiceType(), $terms,
+        $form = $this->createForm('LoginCidadao\TOSBundle\Form\TermsOfServiceType',
+            $terms,
             array(
             'action' => $this->generateUrl('tos_admin_create'),
             'method' => 'POST',
             'translation_domain' => 'LoginCidadaoTOSBundle'
             )
         );
-        $form->add('submit', 'submit',
+        $form->add('submit',
+            'Symfony\Component\Form\Extension\Core\Type\SubmitType',
             array(
             'label' => 'tos.form.create.label',
             'attr' => array('class' => 'btn-success')
@@ -142,7 +144,8 @@ class TermsOfServiceController extends Controller
 
     private function getEditForm(TOSInterface $terms)
     {
-        $form = $this->createForm(new TermsOfServiceType(), $terms,
+        $form = $this->createForm('LoginCidadao\TOSBundle\Form\TermsOfServiceType',
+            $terms,
             array(
             'action' => $this->generateUrl('tos_admin_edit',
                 array('id' => $terms->getId())),
@@ -150,7 +153,8 @@ class TermsOfServiceController extends Controller
             'translation_domain' => 'LoginCidadaoTOSBundle'
             )
         );
-        $form->add('submit', 'submit',
+        $form->add('submit',
+            'Symfony\Component\Form\Extension\Core\Type\SubmitType',
             array(
             'label' => 'tos.form.save.label',
             'attr' => array('class' => 'btn-success')

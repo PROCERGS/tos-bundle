@@ -4,6 +4,7 @@ namespace LoginCidadao\TOSBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TermsOfServiceType extends AbstractType
@@ -28,10 +29,7 @@ class TermsOfServiceType extends AbstractType
         ;
     }
 
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'LoginCidadao\TOSBundle\Entity\TermsOfService'
@@ -39,10 +37,10 @@ class TermsOfServiceType extends AbstractType
     }
 
     /**
-     * @return string
+     * @param OptionsResolverInterface $resolver
      */
-    public function getName()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return 'tos_termsofservice';
+        $this->configureOptions($resolver);
     }
 }
