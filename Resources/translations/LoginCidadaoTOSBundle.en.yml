@@ -28,3 +28,4 @@ tos:
         list:
             title: Available Versions
             item: Version from %date%
+    last_change.not_found: Terms of Service not found

@@ -31,3 +31,4 @@ tos:
         list:
             title: Versões Disponíveis
             item: Versão de %date%
+    last_change.not_found: Termos de Uso não encontrados
