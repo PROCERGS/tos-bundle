@@ -44,7 +44,7 @@ class ToSAgreementTask extends Task
     /**
      * @return boolean
      */
-    public function isIsMandatory()
+    public function isMandatory()
     {
         return true;
     }
