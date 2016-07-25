@@ -3,7 +3,7 @@ parameters:
     tos.terms_of_service.class: LoginCidadao\TOSBundle\Entity\TermsOfService
 
     tos.manager.class: LoginCidadao\TOSBundle\Model\TOSManager
-    tos.agreement.listener.class: LoginCidadao\TOSBundle\EventListener\CheckAgreementListener
+    tos.agreement.subscriber.class: LoginCidadao\TOSBundle\EventListener\ToSAgreementSubscriber
 
     tos.user_register.listener.class: LoginCidadao\TOSBundle\EventListener\RegistrationSubscriber
 
@@ -27,16 +27,16 @@ services:
             - "@tos.agreement.repository"
             - "@tos.terms_of_service.repository"
 
-    tos.agreement.listener:
-        class: %tos.agreement.listener.class%
+    tos.agreement.subscriber:
+        class: %tos.agreement.subscriber.class%
         arguments:
             - "@security.authorization_checker"
             - "@security.token_storage"
             - "@tos.manager"
             - "@security.http_utils"
+            - "%login_cidadao_tos.use_tasks%"
         tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onFilterController }
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_subscriber }
 
     tos.user_register.listener:
         class: %tos.user_register.listener.class%
