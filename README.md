@@ -12,7 +12,7 @@ $ composer require procergs/tos-bundle
 
 ## 2. Enable on your AppKernel
 
-Edit app/AppKernel.php so that `registerBundles` contains the following:
+Edit `app/AppKernel.php` so that `registerBundles` contains the following:
 
 ``` php
 // app/AppKernel.php
