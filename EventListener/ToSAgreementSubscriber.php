@@ -146,6 +146,10 @@ class ToSAgreementSubscriber implements EventSubscriberInterface
 
     public function onGetTasks(GetTasksEvent $event)
     {
+        if (!$this->useTasks) {
+            return;
+        }
+
         if (false === $this->shouldCheckTerms($event)) {
             return;
         }
