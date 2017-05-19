@@ -10,11 +10,11 @@
 
 namespace LoginCidadao\TOSBundle\EventListener;
 
-use LoginCidadao\CoreBundle\Event\GetTasksEvent;
-use LoginCidadao\CoreBundle\Event\LoginCidadaoCoreEvents;
-use LoginCidadao\TOSBundle\Model\ToSAgreementTask;
+use LoginCidadao\TaskStackBundle\Event\GetTasksEvent;
+use LoginCidadao\TaskStackBundle\TaskStackEvents;
 use LoginCidadao\TOSBundle\Model\TOSManager;
 use LoginCidadao\TOSBundle\Exception\TermsNotAgreedException;
+use LoginCidadao\TOSBundle\Task\ToSAgreementTask;
 use Symfony\Bundle\AsseticBundle\Controller\AsseticController;
 use Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController;
 use Symfony\Component\EventDispatcher\Event;
@@ -64,7 +64,7 @@ class ToSAgreementSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::CONTROLLER => ['onFilterController', 0],
             KernelEvents::EXCEPTION => ['onKernelException', 0],
-            LoginCidadaoCoreEvents::GET_TASKS => ['onGetTasks', 0],
+            TaskStackEvents::GET_TASKS => ['onGetTasks', 0],
         ];
     }
 
