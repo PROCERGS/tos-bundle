@@ -11,6 +11,8 @@
 namespace LoginCidadao\TOSBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use LoginCidadao\TOSBundle\Model\AgreementInterface;
 use LoginCidadao\TOSBundle\Model\TOSInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -23,15 +25,23 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AgreementRepository extends EntityRepository
 {
 
-    public function findAgreementByTerms(UserInterface $user,
-                                         TOSInterface $terms)
+    /**
+     * @param UserInterface $user
+     * @param TOSInterface $terms
+     * @return AgreementInterface|null
+     */
+    public function findAgreementByTerms(UserInterface $user, TOSInterface $terms)
     {
-        return $this->createQueryBuilder('a')
+        try {
+            return $this->createQueryBuilder('a')
                 ->where('a.termsOfService = :terms')
                 ->andWhere('a.user = :user')
                 ->orderBy('a.agreedAt', 'DESC')
                 ->setParameters(compact('user', 'terms'))
                 ->setMaxResults(1)
                 ->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
     }
 }
