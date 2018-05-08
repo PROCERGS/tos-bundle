@@ -2,7 +2,7 @@
     "name": "procergs/tos-bundle",
     "description": "Terms of Service Bundle",
     "type": "symfony-bundle",
-    "license": "AGPLv3",
+    "license": "AGPL-3.0",
     "authors": [
         {
             "name": "Guilherme Donato",
