@@ -25,14 +25,15 @@ class MarkdownExtension extends Twig_Extension
 
     public function getFilters()
     {
-        return array(
-            new Twig_SimpleFilter('markdown', array($this, 'markdownFilter')),
-        );
+        return [
+            new Twig_SimpleFilter('markdown', [$this, 'markdownFilter']),
+        ];
     }
 
     public function markdownFilter($text, Parser $parser = null)
     {
         $markup = $this->parser->parse($text);
+
         return $markup;
     }
 

@@ -11,6 +11,7 @@
 namespace LoginCidadao\TOSBundle\Controller;
 
 use LoginCidadao\TOSBundle\Entity\Agreement;
+use LoginCidadao\TOSBundle\Entity\TermsOfServiceRepository;
 use LoginCidadao\TOSBundle\Form\AgreementType;
 use LoginCidadao\TOSBundle\Model\TOSInterface;
 use LoginCidadao\TOSBundle\Model\AgreementInterface;
@@ -28,11 +29,11 @@ class AgreementController extends Controller
      */
     public function askAction(Request $request)
     {
+        /** @var TermsOfServiceRepository $termsRepo */
         $termsRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
-        $latest    = $termsRepo->findLatestTerms();
+        $latest = $termsRepo->findLatestTerms();
 
-        if (!($latest instanceof TOSInterface) ||
-            $this->agreedToTermsOfService()) {
+        if (!$latest instanceof TOSInterface || $this->agreedToTermsOfService()) {
             return $this->continueNavigation($request);
         }
 
@@ -56,38 +57,38 @@ class AgreementController extends Controller
 
     private function getAgreementForm(AgreementInterface $agreement)
     {
-        $form = $this->createForm(new AgreementType(), $agreement,
-            array(
+        $form = $this->createForm(AgreementType::class, $agreement, [
             'action' => $this->generateUrl('tos_agree'),
             'method' => 'POST',
-            'translation_domain' => 'LoginCidadaoTOSBundle'
-        ));
-        $form->add('submit', 'submit',
-            array(
+            'translation_domain' => 'LoginCidadaoTOSBundle',
+        ]);
+        $form->add('submit', 'submit', [
             'label' => 'tos.form.button.submit',
-            'attr' => array('class' => 'btn-success')
-        ));
+            'attr' => ['class' => 'btn-success'],
+        ]);
+
         return $form;
     }
 
     private function agreedToTermsOfService()
     {
-        $termsRepo     = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
+        /** @var TermsOfServiceRepository $termsRepo */
+        $termsRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
         $agreementRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:Agreement');
 
-        $user   = $this->getUser();
+        $user = $this->getUser();
         $latest = $termsRepo->findLatestTerms();
 
-        if (!($latest instanceof TOSInterface)) {
+        if (!$latest instanceof TOSInterface) {
             return true;
         }
 
-        $agreement = $agreementRepo->findOneBy(array(
+        $agreement = $agreementRepo->findOneBy([
             'user' => $user,
-            'termsOfService' => $latest
-        ));
+            'termsOfService' => $latest,
+        ]);
 
-        if (!($agreement instanceof AgreementInterface)) {
+        if (!$agreement instanceof AgreementInterface) {
             return false;
         }
 
@@ -98,6 +99,7 @@ class AgreementController extends Controller
     {
         $url = $request->getSession()->get('tos_continue_url', '/');
         $request->getSession()->remove('tos_continue_url');
+
         return $this->redirect($url);
     }
 }

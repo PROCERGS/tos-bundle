@@ -141,7 +141,7 @@ class TermsOfService implements TOSInterface
      */
     public function setCreatedAtValue()
     {
-        if (!($this->getCreatedAt() instanceof \DateTime)) {
+        if (!$this->getCreatedAt() instanceof \DateTime) {
             $this->createdAt = new \DateTime();
         }
     }

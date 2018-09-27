@@ -11,28 +11,31 @@
 namespace LoginCidadao\TOSBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use LoginCidadao\TOSBundle\Form\DataTransformer\DateToBooleanTransformer;
 
 class AgreementDateType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new DateToBooleanTransformer());
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'translation_domain' => 'LoginCidadaoTOSBundle'
-        ));
+        $resolver->setDefaults([
+            'translation_domain' => 'LoginCidadaoTOSBundle',
+        ]);
     }
 
     public function getParent()
     {
-        return 'checkbox';
+        return CheckboxType::class;
     }
 
     public function getName()

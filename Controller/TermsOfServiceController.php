@@ -10,6 +10,9 @@
 
 namespace LoginCidadao\TOSBundle\Controller;
 
+use LoginCidadao\TOSBundle\Entity\AgreementRepository;
+use LoginCidadao\TOSBundle\Entity\TermsOfServiceRepository;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,7 +25,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class TermsOfServiceController extends Controller
 {
-
     /**
      * @Route("/admin/terms", name="tos_admin_list")
      * @Method("GET")
@@ -31,9 +33,10 @@ class TermsOfServiceController extends Controller
      */
     public function listAction()
     {
+        /** @var TermsOfServiceRepository $termsRepo */
         $termsRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
-        $terms     = $termsRepo->findAll();
-        $latest    = $termsRepo->findLatestTerms();
+        $terms = $termsRepo->findAll();
+        $latest = $termsRepo->findLatestTerms();
 
         return compact('terms', 'latest');
     }
@@ -46,9 +49,12 @@ class TermsOfServiceController extends Controller
      */
     public function editAction(Request $request, $id)
     {
+        /** @var TermsOfServiceRepository $termsRepo */
         $termsRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
-        $terms     = $termsRepo->find($id);
-        $form      = $this->getEditForm($terms);
+
+        /** @var TOSInterface $terms */
+        $terms = $termsRepo->find($id);
+        $form = $this->getEditForm($terms);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -68,7 +74,7 @@ class TermsOfServiceController extends Controller
     public function newAction()
     {
         $terms = new TermsOfService();
-        $form  = $this->getCreateForm($terms);
+        $form = $this->getCreateForm($terms);
 
         return compact('form');
     }
@@ -82,7 +88,7 @@ class TermsOfServiceController extends Controller
     public function createAction(Request $request)
     {
         $terms = new TermsOfService();
-        $form  = $this->getCreateForm($terms);
+        $form = $this->getCreateForm($terms);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -104,16 +110,19 @@ class TermsOfServiceController extends Controller
      */
     public function showLatestAction(Request $request)
     {
-        $user     = $this->getUser();
+        $user = $this->getUser();
         $username = $request->get('username');
         if ($user === null && $username !== null) {
             $userManager = $this->get('fos_user.user_manager');
-            $username    = $request->get('username');
-            $user        = $userManager->findByUsername($username);
+            $username = $request->get('username');
+            $user = $userManager->findByUsername($username);
         }
-        $termsRepo     = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
+        /** @var TermsOfServiceRepository $termsRepo */
+        $termsRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:TermsOfService');
+
+        /** @var AgreementRepository $agreementRepo */
         $agreementRepo = $this->getDoctrine()->getRepository('LoginCidadaoTOSBundle:Agreement');
-        $latest        = $termsRepo->findLatestTerms();
+        $latest = $termsRepo->findLatestTerms();
         if ($user !== null) {
             $agreement = $agreementRepo->findAgreementByTerms($user, $latest);
         } else {
@@ -125,40 +134,31 @@ class TermsOfServiceController extends Controller
 
     private function getCreateForm(TOSInterface $terms)
     {
-        $form = $this->createForm('LoginCidadao\TOSBundle\Form\TermsOfServiceType',
-            $terms,
-            array(
+        $form = $this->createForm(TermsOfServiceType::class, $terms, [
             'action' => $this->generateUrl('tos_admin_create'),
             'method' => 'POST',
-            'translation_domain' => 'LoginCidadaoTOSBundle'
-            )
-        );
-        $form->add('submit',
-            'Symfony\Component\Form\Extension\Core\Type\SubmitType',
-            array(
+            'translation_domain' => 'LoginCidadaoTOSBundle',
+        ]);
+        $form->add('submit', SubmitType::class, [
             'label' => 'tos.form.create.label',
-            'attr' => array('class' => 'btn-success')
-        ));
+            'attr' => ['class' => 'btn-success'],
+        ]);
+
         return $form;
     }
 
     private function getEditForm(TOSInterface $terms)
     {
-        $form = $this->createForm('LoginCidadao\TOSBundle\Form\TermsOfServiceType',
-            $terms,
-            array(
-            'action' => $this->generateUrl('tos_admin_edit',
-                array('id' => $terms->getId())),
+        $form = $this->createForm(TermsOfServiceType::class, $terms, [
+            'action' => $this->generateUrl('tos_admin_edit', ['id' => $terms->getId()]),
             'method' => 'POST',
-            'translation_domain' => 'LoginCidadaoTOSBundle'
-            )
-        );
-        $form->add('submit',
-            'Symfony\Component\Form\Extension\Core\Type\SubmitType',
-            array(
+            'translation_domain' => 'LoginCidadaoTOSBundle',
+        ]);
+        $form->add('submit', SubmitType::class, [
             'label' => 'tos.form.save.label',
-            'attr' => array('class' => 'btn-success')
-        ));
+            'attr' => ['class' => 'btn-success'],
+        ]);
+
         return $form;
     }
 }

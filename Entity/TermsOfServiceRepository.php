@@ -18,6 +18,7 @@ class TermsOfServiceRepository extends EntityRepository
 
     /**
      * @return TOSInterface
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLatestTerms()
     {

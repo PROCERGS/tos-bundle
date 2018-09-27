@@ -10,7 +10,7 @@
 
 namespace LoginCidadao\TOSBundle\EventListener;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use LoginCidadao\TOSBundle\Model\TOSManager;
@@ -18,15 +18,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RegistrationSubscriber implements EventSubscriberInterface
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /** @var TOSManager */
     private $manager;
 
-    public function __construct(EntityManager $em, TOSManager $manager)
+    public function __construct(EntityManagerInterface $em, TOSManager $manager)
     {
-        $this->em      = $em;
+        $this->em = $em;
         $this->manager = $manager;
     }
 
@@ -35,9 +35,9 @@ class RegistrationSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             FOSUserEvents::REGISTRATION_COMPLETED => 'onRegistrationCompleted',
-        );
+        ];
     }
 
     public function onRegistrationCompleted(FilterUserResponseEvent $event)

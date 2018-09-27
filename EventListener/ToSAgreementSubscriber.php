@@ -113,9 +113,7 @@ class ToSAgreementSubscriber implements EventSubscriberInterface
                 return false;
             }
 
-            if ($controller[0] instanceof AsseticController ||
-                $controller[0] instanceof ProfilerController
-            ) {
+            if ($controller[0] instanceof AsseticController || $controller[0] instanceof ProfilerController) {
                 return false;
             }
         }
@@ -130,16 +128,13 @@ class ToSAgreementSubscriber implements EventSubscriberInterface
         }
         $exception = $event->getException();
 
-        if (!($exception instanceof TermsNotAgreedException)) {
+        if (!$exception instanceof TermsNotAgreedException) {
             return;
         }
 
         $route = 'tos_agree';
         $request = $event->getRequest();
-        $request->getSession()->set(
-            'tos_continue_url',
-            $request->getRequestUri()
-        );
+        $request->getSession()->set('tos_continue_url', $request->getRequestUri());
         $response = $this->httpUtils->createRedirectResponse($request, $route);
         $event->setResponse($response);
     }

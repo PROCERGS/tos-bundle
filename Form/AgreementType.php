@@ -10,9 +10,10 @@
 
 namespace LoginCidadao\TOSBundle\Form;
 
+use LoginCidadao\TOSBundle\Entity\Agreement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AgreementType extends AbstractType
 {
@@ -23,26 +24,22 @@ class AgreementType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('agreedAt', new AgreementDateType(),
-                array(
-                'label' => 'tos.form.agreed_at.label',
-                'required' => true,
-                'invalid_message' => 'tos.form.agreed_at.error'
-                )
-            )
-        ;
+        $builder->add('agreedAt', AgreementDateType::class, [
+            'label' => 'tos.form.agreed_at.label',
+            'required' => true,
+            'invalid_message' => 'tos.form.agreed_at.error',
+        ]);
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @inheritDoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'LoginCidadao\TOSBundle\Entity\Agreement',
-            'translation_domain' => 'LoginCidadaoTOSBundle'
-        ));
+        $resolver->setDefaults([
+            'data_class' => Agreement::class,
+            'translation_domain' => 'LoginCidadaoTOSBundle',
+        ]);
     }
 
     /**

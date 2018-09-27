@@ -10,9 +10,7 @@
 
 namespace LoginCidadao\TOSBundle\Exception;
 
-use \RuntimeException;
-
-class TermsNotAgreedException extends RuntimeException
+class TermsNotAgreedException extends \RuntimeException
 {
     //
 }

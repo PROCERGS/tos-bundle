@@ -14,6 +14,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface TOSInterface
 {
+    /**
+     * @return mixed
+     */
+    public function getId();
 
     /**
      * @return UserInterface
