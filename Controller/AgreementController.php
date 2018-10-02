@@ -15,6 +15,7 @@ use LoginCidadao\TOSBundle\Entity\TermsOfServiceRepository;
 use LoginCidadao\TOSBundle\Form\AgreementType;
 use LoginCidadao\TOSBundle\Model\TOSInterface;
 use LoginCidadao\TOSBundle\Model\AgreementInterface;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -62,7 +63,7 @@ class AgreementController extends Controller
             'method' => 'POST',
             'translation_domain' => 'LoginCidadaoTOSBundle',
         ]);
-        $form->add('submit', 'submit', [
+        $form->add('submit', SubmitType::class, [
             'label' => 'tos.form.button.submit',
             'attr' => ['class' => 'btn-success'],
         ]);
